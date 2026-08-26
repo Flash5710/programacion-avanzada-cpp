@@ -28,14 +28,27 @@ public:
         // TODO: si saldoInicial es negativo, asigna saldo = 0.0 y avisa
         // por consola: "Aviso: saldo inicial invalido, se uso 0 por defecto"
         // Si no es negativo, asigna saldo = saldoInicial.
+        if(!set_saldo(saldoInicial)){
+            saldo=0.0;
+            std::cout<<"Aviso: saldo inicial invalido, se uso 0 por defecto"<<std::endl;
+        }
     }
 
     ~CuentaBancaria() {
         // TODO: imprime "CuentaBancaria destruida, saldo final: "
         // seguido del saldo.
+        std::cout<<"CuentaBancaria destruida, saldo final: "<<saldo<<std::endl;
     }
 
     double getSaldo() { return saldo; }
+
+    double set_saldo(double nuevo_saldo){
+        if(nuevo_saldo<0.0){ return false;}
+        else {
+            saldo=nuevo_saldo;
+            return true;
+        }
+    }
 
     bool depositar(double monto) {
         if (monto <= 0.0) {

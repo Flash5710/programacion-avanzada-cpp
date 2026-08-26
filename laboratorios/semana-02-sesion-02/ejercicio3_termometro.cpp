@@ -34,11 +34,28 @@ public:
         //
         // TODO: despues de decidir el valor, imprime
         // "Termometro creado con " + gradosCelsius + " grados Celsius"
+        if(!set_grados(celsiusInicial)){
+            gradosCelsius=0.0;
+            std::cout<<"Aviso temperatura invalida, se uso 0 por defecto"<<std::endl;
+        }
+
+        std::cout<<"Termometro creado con "<<gradosCelsius<<" grados Celsius"<<std::endl;
+
     }
 
     ~Termometro() {
         // TODO: imprime "Termometro destruido, ultima lectura: "
         // seguido de gradosCelsius y " C".
+        std::cout<<"Termometro destruido, ultima lectura: "<<gradosCelsius<<" C"<<std::endl;
+    }
+
+    double set_grados(double nuevo_celsius){
+        if(nuevo_celsius<-273.15){ return false;}
+        else{
+            gradosCelsius=nuevo_celsius;
+            return true;
+        }
+    
     }
 
     double getCelsius() {
@@ -48,7 +65,7 @@ public:
     double convertirAFahrenheit() {
         // TODO: retorna gradosCelsius convertido a Fahrenheit:
         // celsius * 9 / 5 + 32
-        return 0.0;
+        return (gradosCelsius*9/5)+32;
     }
 };
 
