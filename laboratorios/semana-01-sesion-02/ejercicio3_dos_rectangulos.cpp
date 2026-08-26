@@ -3,7 +3,7 @@
 // Parte A: un "sistema" de dos rectangulos
 // armado con funciones sueltas y 4 variables independientes. Tiene un bug.
 //
-// TODO (prediccion, escribe tu respuesta como comentario justo aqui):
+// TODO (escribe tu respuesta como comentario justo aqui):
 // En que linea esta el bug, y que deberia decir en su lugar?
 // El bug se encuentra en la línea 39 y 40, usa altura1 para base2. Debería usar base2 y altura2 para calcular area y perimetro
 //
