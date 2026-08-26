@@ -36,7 +36,7 @@ public:
         // "Termometro creado con " + gradosCelsius + " grados Celsius"
         if(!set_grados(celsiusInicial)){
             gradosCelsius=0.0;
-            std::cout<<"Aviso temperatura invalida, se uso 0 por defecto"<<std::endl;
+            std::cout<<"Aviso: temperatura invalida, se uso 0 por defecto"<<std::endl;
         }
 
         std::cout<<"Termometro creado con "<<gradosCelsius<<" grados Celsius"<<std::endl;
