@@ -43,13 +43,16 @@ public:
         // + otra.getNumerador() * denominador, y nuevoDenominador =
         // denominador * otra.getDenominador(). Retorna un Fraccion nuevo
         // con esos dos valores.
-        return Fraccion(0, 1);
+        double nuevoNumerador= numerador * otra.getDenominador() + otra.getNumerador() * denominador;
+        double nuevoDenominador= denominador * otra.getDenominador();
+        return Fraccion(nuevoNumerador, nuevoDenominador);
     }
-};
+};  
 
 std::ostream& operator<<(std::ostream& os, Fraccion f) {
     // TODO: escribe en os algo como "numerador/denominador", usando
     // f.getNumerador() y f.getDenominador(), y despues retorna os.
+    std::cout<<f.getNumerador()<<"/"<<f.getDenominador();
     return os;
 }
 
