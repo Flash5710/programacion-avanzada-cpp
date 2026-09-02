@@ -52,7 +52,7 @@ public:
 std::ostream& operator<<(std::ostream& os, Fraccion f) {
     // TODO: escribe en os algo como "numerador/denominador", usando
     // f.getNumerador() y f.getDenominador(), y despues retorna os.
-    std::cout<<f.getNumerador()<<"/"<<f.getDenominador();
+    os<<f.getNumerador()<<"/"<<f.getDenominador();
     return os;
 }
 

@@ -44,7 +44,7 @@ public:
 std::ostream& operator<<(std::ostream& os, Vector2D v) {
     // TODO: escribe en os algo como "(x, y)", usando v.getX() y
     // v.getY(), y despues retorna os.
-    std::cout <<"("<< v.getX() <<", "<< v.getY()<<")"; 
+    os <<"("<< v.getX() <<", "<< v.getY()<<")"; 
     return os;
 }
 

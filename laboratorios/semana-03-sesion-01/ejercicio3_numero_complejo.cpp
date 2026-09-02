@@ -37,7 +37,7 @@ std::ostream& operator<<(std::ostream& os, NumeroComplejo c) {
     // TODO: escribe en os algo como "real + imaginarioi" (por ejemplo,
     // "3 + 2i"), usando c.getReal() y c.getImaginario(), y despues
     // retorna os.
-    std::cout<<c.getReal()<<" + "<<c.getImaginario()<<"i";
+    os<<c.getReal()<<" + "<<c.getImaginario()<<"i";
     return os;
 }
 
