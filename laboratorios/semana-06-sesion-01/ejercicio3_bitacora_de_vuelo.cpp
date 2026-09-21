@@ -1,9 +1,9 @@
 #include <iostream>
 #include <utility>
 
-// TODO: completa BitacoraDeVuelo con el mismo patron de RegistroDeVuelo
+// TODO: completa BitacoraDeVuelo con el mismo patron de BitacoraDeVuelo
 // (Ejercicios 1 y 2), aplicado a un arreglo dinamico de consumos de
-// combustible por tramo, en vez de alturas:
+// combustible por tramo, en vez de consumos:
 // - Atributos privados: double* consumos y int capacidad.
 // - Constructor BitacoraDeVuelo(int nuevaCapacidad): reserva memoria con
 //   new[] e imprime "Bitacora creada para <capacidad> tramos".
@@ -20,6 +20,52 @@
 // - Destructor ~BitacoraDeVuelo(): libera con delete[] e imprime
 //   "Destruyendo bitacora (capacidad <capacidad>)".
 class BitacoraDeVuelo {
+    private:
+    double* consumos;
+    int capacidad;
+
+    public:
+    BitacoraDeVuelo (int nuevaCapacidad){
+        capacidad=nuevaCapacidad;
+        consumos= new double(capacidad);
+
+        std::cout<<"Bitacora creada para "<<capacidad<<" tramos"<<std::endl;
+    }
+
+    void guardarConsumo(int indice, double valor){
+        consumos[indice]=valor;
+    }
+
+    double getConsumo(int indice){
+        if (consumos == nullptr) {
+                std::cout << "Registro vacio (fue movido)" << std::endl;
+                return 0.0;
+            }
+            return consumos[indice];
+    }
+
+    BitacoraDeVuelo (BitacoraDeVuelo&& otro){
+            consumos=otro.consumos;
+            capacidad=otro.capacidad;
+            otro.consumos=nullptr;
+            otro.capacidad=0;
+        }
+    
+    BitacoraDeVuelo& operator=(BitacoraDeVuelo&& otro){
+            if (this != &otro){
+                delete[] consumos;
+                consumos=otro.consumos;
+                capacidad=otro.capacidad;
+                otro.consumos=nullptr;
+                otro.capacidad=0;
+            }
+            return *this;
+        }
+    
+    ~BitacoraDeVuelo() {
+            std::cout << "Destruyendo Bitacora (capacidad " << capacidad << ")" << std::endl;
+            delete[] consumos;
+        }    
 };
 
 int main() {

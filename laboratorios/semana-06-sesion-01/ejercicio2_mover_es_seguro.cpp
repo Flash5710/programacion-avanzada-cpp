@@ -17,10 +17,30 @@ class RegistroDeVuelo {
         // nueva ni copiar ningun elemento), y deja "otro" en un estado
         // vacio y seguro (alturas = nullptr, capacidad = 0).
 
+        RegistroDeVuelo (RegistroDeVuelo&& otro){
+            std::cout << "Moviedo registro (sin copia superficial)"<<std::endl;
+            alturas=otro.alturas;
+            capacidad=otro.capacidad;
+            otro.alturas=nullptr;
+            otro.capacidad=0;
+        }
+
         // TODO: operador de asignacion de movimiento. Misma idea que el
         // constructor de movimiento, pero primero libera con delete[] la
         // memoria que este objeto ya tenia, antes de robar la de "otro".
         // Recuerda comprobar "this != &otro" antes de liberar.
+        RegistroDeVuelo& operator=(RegistroDeVuelo&& otro){
+            std::cout<<"Moviendo registro con objeto ya asigando"<<std::endl;
+            if (this != &otro){
+                delete[] alturas;
+                alturas=otro.alturas;
+                capacidad=otro.capacidad;
+                otro.alturas=nullptr;
+                otro.capacidad=0;
+            }
+            return *this;
+        }
+
 
         void guardarAltura(int indice, double valor) {
             alturas[indice] = valor;
