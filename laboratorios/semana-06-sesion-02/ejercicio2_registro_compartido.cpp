@@ -5,14 +5,14 @@
 class RegistroDeVuelo {
     private:
         // TODO: cambia "double* alturas" por std::unique_ptr<double[]>.
-        double* alturas;
+        std::unique_ptr<double[]> alturas;
         int capacidad;
     public:
         RegistroDeVuelo(int nuevaCapacidad) {
             capacidad = nuevaCapacidad;
             // TODO: crea "alturas" con std::make_unique<double[]>(capacidad)
             // en vez de "new double[capacidad]".
-            alturas = new double[capacidad];
+            alturas = std::make_unique<double[]> (capacidad);
             std::cout << "Registro de vuelo creado para " << capacidad << " lecturas" << std::endl;
         }
 
@@ -28,7 +28,6 @@ class RegistroDeVuelo {
         // esto. Borra el destructor completo (unique_ptr libera solo).
         ~RegistroDeVuelo() {
             std::cout << "Destruyendo registro (capacidad " << capacidad << ")" << std::endl;
-            delete[] alturas;
         }
 };
 
@@ -36,14 +35,17 @@ class MonitorDeVuelo {
     private:
         // TODO: declara "registro" como std::shared_ptr<RegistroDeVuelo>.
         int idMonitor;
+        std::shared_ptr<RegistroDeVuelo> registro;
     public:
         // TODO: el constructor recibe std::shared_ptr<RegistroDeVuelo>
         // unRegistro por valor, y lo guarda con
         // registro = std::move(unRegistro); (mover el shared_ptr local
         // hacia el atributo evita una copia de mas, aunque la clase ya
         // permite copiar shared_ptr sin ningun riesgo).
-        MonitorDeVuelo(int unId) {
+        MonitorDeVuelo(std::shared_ptr<RegistroDeVuelo> nuevoRegistro, int unId) {
             idMonitor = unId;
+            registro = std::move(nuevoRegistro);
+            std::cout<<"Monitor: "<<idMonitor<<" conectado. Cuenta"<<registro.use_count()<<std::endl;
         }
 
         void reportar(int indice) {
@@ -73,6 +75,24 @@ int main() {
     // reportar(0) en cada uno. Al cerrar el bloque, los monitores se
     // destruyen; muestra compartido.use_count() una vez mas para
     // confirmar que volvio a bajar.
+    std::shared_ptr<RegistroDeVuelo> registroCompartido = std::make_shared<RegistroDeVuelo>(5);
 
+    registroCompartido->guardarAltura(0,200.0);
+
+    std::cout<<"Cuenta antes de monitorear: "<<registroCompartido.use_count()<<std::endl;
+
+    {
+        MonitorDeVuelo torre_quito(registroCompartido, 1);
+        MonitorDeVuelo torre_ambato(registroCompartido, 2);
+        MonitorDeVuelo torre_cuenca(registroCompartido, 3);
+
+        std::cout<<"Cuenta despues de monitores: "<<registroCompartido.use_count()<<std::endl;
+
+        torre_quito.reportar(0);
+        torre_ambato.reportar(0);
+        torre_cuenca.reportar(0);
+    }
+
+    std::cout<<"Cuenta despues de CERRAR los monitores: "<<registroCompartido.use_count()<<std::endl;
     return 0;
 }
