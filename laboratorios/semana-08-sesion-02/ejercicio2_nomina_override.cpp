@@ -15,7 +15,7 @@ class Empleado {
         virtual double salarioMensual() {
             return 0.0;
         }
-
+ 
         virtual void imprimirRol() {
             std::cout << "Empleado sin rol";
         }
@@ -32,11 +32,11 @@ class Docente : public Empleado {
 
         // TODO (paso 2): agrega "override" despues de "()" en los dos
         // metodos de esta clase.
-        double salarioMensual() {
+        double salarioMensual() override{
             return sueldoFijo;
         }
 
-        void imprimirRol() {
+        void imprimirRol() override{
             std::cout << "Docente";
         }
 };
@@ -59,11 +59,11 @@ class Contratista : public Empleado {
         // TODO (paso 3): corrige el metodo que el compilador rechaza para
         // que de verdad redefina al de Empleado. Las horas ya estan
         // guardadas en el atributo horasDelMes.
-        double salarioMensual(int horas) {
-            return tarifaPorHora * horas;
+        double salarioMensual() override{
+            return tarifaPorHora * horasDelMes;
         }
 
-        void imprimirRol() {
+        void imprimirRol() override{
             std::cout << "Contratista";
         }
 };
