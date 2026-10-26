@@ -1,0 +1,81 @@
+#include <iostream>
+#include <memory>
+
+// Historial<T> de la sesion pasada: capacidad fija, y rechaza el valor
+// que ya no cabe.
+
+template <typename T>
+class Historial {
+    private:
+        // TODO (paso 1): reemplaza estos tres atributos por un solo
+        // std::vector<T> llamado valores. Incluye <vector> arriba.
+        std::unique_ptr<T[]> valores;
+        int capacidad;
+        int usadas;
+    public:
+        Historial(int capacidadInicial) {
+            // TODO (paso 1): con el vector, reserva espacio para
+            // capacidadInicial elementos con valores.reserve(...).
+            capacidad = capacidadInicial;
+            usadas = 0;
+            valores = std::make_unique<T[]>(capacidad);
+        }
+
+        bool agregar(T valor) {
+            // TODO (paso 2): con push_back el historial ya no se llena.
+            // Agrega el valor y devuelve true siempre.
+            if (usadas >= capacidad) {
+                return false;
+            }
+            valores[usadas] = valor;
+            usadas = usadas + 1;
+            return true;
+        }
+
+        T obtener(int indice) {
+            return valores[indice];
+        }
+
+        T ultimo() {
+            // TODO (paso 2): el ultimo elemento del vector.
+            return valores[usadas - 1];
+        }
+
+        int getUsadas() {
+            // TODO (paso 2): cuantos elementos tiene el vector.
+            return usadas;
+        }
+
+        int getCapacidad() {
+            // TODO (paso 3): cuantos elementos caben sin reservar memoria
+            // nueva.
+            return capacidad;
+        }
+};
+
+int main() {
+    Historial<int> pasos(3);
+    int dias[6] = {4200, 1800, 3300, 5100, 2700, 3900};
+
+    for (int i = 0; i < 6; i++) {
+        bool aceptado = pasos.agregar(dias[i]);
+        std::cout << "Agregar " << dias[i] << ": ";
+        if (aceptado) {
+            std::cout << "aceptado";
+        } else {
+            std::cout << "rechazado";
+        }
+        std::cout << " (usadas " << pasos.getUsadas() << ", capacidad " << pasos.getCapacidad() << ")" << std::endl;
+    }
+    std::cout << "Ultimo dia: " << pasos.ultimo() << std::endl;
+    std::cout << "Primer dia: " << pasos.obtener(0) << std::endl;
+
+    // TODO (paso 4): crea un std::vector<int> llamado semana con los
+    // valores {4200, 1800, 3300, 5100, 2700, 3900, 4600}.
+    // a) Imprime "Semana:" y cada valor precedido de un espacio,
+    //    recorriendo con un iterador, de semana.begin() a semana.end().
+    // b) Suma los valores con un for de rango e imprime
+    //    "Total de la semana: " con el resultado.
+
+    return 0;
+}
