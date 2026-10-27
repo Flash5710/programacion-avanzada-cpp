@@ -1,4 +1,7 @@
 #include <iostream>
+#include <map>
+#include <vector>
+#include <set>
 
 // Salida esperada:
 // Stock: 120=2 210=5 305=10
@@ -50,6 +53,72 @@
 //   precedido de un espacio. Termina la linea.
 // - void imprimirAgotados(): "Agotados alguna vez:" y cada codigo
 //   precedido de un espacio. Termina la linea.
+
+class Bodega {
+    private:
+        std::map<int, int> stock;
+        std::vector<int> historialRetiros;
+        std::set<int> agotados;
+
+    public:
+        void ingresar(int codigo, int cantidad) {
+            stock[codigo] += cantidad;
+        }
+
+        bool retirar(int codigo, int cantidad) {
+            if (stock.find(codigo) == stock.end() || stock[codigo] < cantidad) {
+                return false;
+            }
+            
+            stock[codigo] -= cantidad;
+            historialRetiros.push_back(codigo);
+            
+            if (stock[codigo] == 0) {
+                agotados.insert(codigo);
+            }
+            
+            return true;
+        }
+
+        int stockDe(int codigo) {
+            if (stock.find(codigo) != stock.end()) {
+                return stock[codigo];
+            }
+            return 0;
+        }
+
+        int cantidadDeProductos() {
+            return stock.size();
+        }
+
+        int retiroNumero(int posicion) {
+            return historialRetiros[posicion];
+        }
+
+        void imprimirStock() {
+            std::cout << "Stock:";
+            for (auto const& par : stock) {
+                std::cout << " " << par.first << "=" << par.second;
+            }
+            std::cout << std::endl;
+        }
+
+        void imprimirRetiros() {
+            std::cout << "Retiros:";
+            for (int codigo : historialRetiros) {
+                std::cout << " " << codigo;
+            }
+            std::cout << std::endl;
+        }
+
+        void imprimirAgotados() {
+            std::cout << "Agotados alguna vez:";
+            for (int codigo : agotados) {
+                std::cout << " " << codigo;
+            }
+            std::cout << std::endl;
+        }
+};
 
 void informarRetiro(int codigo, int cantidad, bool aceptado) {
     std::cout << "Retirar " << cantidad << " de " << codigo << ": ";
