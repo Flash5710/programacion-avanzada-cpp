@@ -1,6 +1,8 @@
 #include <iostream>
 #include <map>
 #include <vector>
+#include <optional>
+#include <stdexcept>
 
 // Salida esperada:
 // Placa 4521: puesto 0
@@ -40,9 +42,9 @@ class Estacionamiento {
 
         // Devuelve el puesto asignado, -1 si no hay puestos libres, o -2 si
         // la placa ya esta adentro.
-        int asignarPuesto(int placa) {
+        std::optional<int> asignarPuesto(int placa) {
             if (puestoDePlaca.count(placa) == 1) {
-                return -2;
+                throw std::invalid_argument("placa ya registrada");
             }
             for (int i = 0; i < totalPuestos; i++) {
                 if (!ocupado[i]) {
@@ -51,26 +53,26 @@ class Estacionamiento {
                     return i;
                 }
             }
-            return -1;
+            return std::nullopt;
         }
 
         // Devuelve el puesto de la placa, o -1 si no esta adentro.
-        int puestoDe(int placa) {
+        std::optional<int> puestoDe(int placa) {
             if (puestoDePlaca.count(placa) == 0) {
-                return -1;
+                return std::nullopt;
             }
             return puestoDePlaca[placa];
         }
 
         // Libera el puesto de la placa y lo devuelve, o -1 si no estaba.
         int liberar(int placa) {
-            int puesto = puestoDe(placa);
-            if (puesto == -1) {
-                return -1;
+            std::optional<int> puesto = puestoDe(placa);
+            if (!puesto.has_value()) {
+                throw std::invalid_argument("no esta en el estacionamiento");
             }
-            ocupado[puesto] = false;
+            ocupado[puesto.value()] = false;
             puestoDePlaca.erase(placa);
-            return puesto;
+            return puesto.value();
         }
 };
 
@@ -79,24 +81,52 @@ int main() {
 
     int llegadas[5] = {4521, 7788, 3011, 9090, 7788};
     for (int i = 0; i < 5; i++) {
-        int puesto = estacionamiento.asignarPuesto(llegadas[i]);
-        std::cout << "Placa " << llegadas[i] << ": puesto " << puesto << std::endl;
+        try {
+            std::optional<int> puesto = estacionamiento.asignarPuesto(llegadas[i]);
+            if (puesto.has_value()) {
+                std::cout << "Placa " << llegadas[i] << ": puesto " << puesto.value() << std::endl;
+            } else {
+                std::cout << "Placa " << llegadas[i] << ": sin puesto, estacionamiento lleno" << std::endl;
+            }
+        } catch (const std::invalid_argument& e) {
+            std::cout << "Placa " << llegadas[i] << ": error, " << e.what() << std::endl;
+        }
     }
 
     int consultas[2] = {7788, 5555};
     for (int i = 0; i < 2; i++) {
-        int puesto = estacionamiento.puestoDe(consultas[i]);
-        std::cout << "Placa " << consultas[i] << " esta en el puesto " << puesto << std::endl;
+        std::optional<int> puesto = estacionamiento.puestoDe(consultas[i]);
+        if (puesto.has_value()) {
+            std::cout << "Placa " << consultas[i] << " esta en el puesto " << puesto.value() << std::endl;
+        } else {
+            std::cout << "Placa " << consultas[i] << " no esta en el estacionamiento" << std::endl;
+        }
     }
 
-    int liberado = estacionamiento.liberar(4521);
-    std::cout << "Placa 4521 sale del puesto " << liberado << std::endl;
+    try {
+        int liberado = estacionamiento.liberar(4521);
+        std::cout << "Placa 4521 sale del puesto " << liberado << std::endl;
+    } catch (const std::invalid_argument& e) {
+        std::cout << "Placa 4521 " << e.what() << std::endl;
+    }
 
-    int nuevo = estacionamiento.asignarPuesto(9090);
-    std::cout << "Placa 9090: puesto " << nuevo << std::endl;
+    try {
+        std::optional<int> nuevo = estacionamiento.asignarPuesto(9090);
+        if (nuevo.has_value()) {
+            std::cout << "Placa 9090: puesto " << nuevo.value() << std::endl;
+        } else {
+            std::cout << "Placa 9090: sin puesto, estacionamiento lleno" << std::endl;
+        }
+    } catch (const std::invalid_argument& e) {
+        std::cout << "Placa 9090: error, " << e.what() << std::endl;
+    }
 
-    int otraVez = estacionamiento.liberar(4521);
-    std::cout << "Placa 4521 sale del puesto " << otraVez << std::endl;
+    try {
+        int otraVez = estacionamiento.liberar(4521);
+        std::cout << "Placa 4521 sale del puesto " << otraVez << std::endl;
+    } catch (const std::invalid_argument& e) {
+        std::cout << "Placa 4521 " << e.what() << std::endl;
+    }
 
     return 0;
 }
